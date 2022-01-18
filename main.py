@@ -5,7 +5,7 @@
 #       4) Setup github
 #       5) Research Cogs and how we may utilize them.
 
-import discord, asyncio, sys
+import discord, asyncio, os
 from discord.ext import commands
 
 # Initilize bot object and intents
@@ -18,7 +18,7 @@ vc_category=392461674218651658
 perm_voip=[392475931165327360]
 
 # TODO: Replace with system variable impport
-token=""
+token=os.environ.get('DISCORD_BOT_TOKEN')
 
 if __name__ == "__main__":
     # Function runs when bot connection finalizes
