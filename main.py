@@ -5,8 +5,12 @@
 #       4) Setup github
 #       5) Research Cogs and how we may utilize them.
 
+# Import Pycord and other needed packages
 import discord, asyncio, os
 from discord.ext import commands
+# Import API Keys from file
+from dotenv import load_dotenv
+load_dotenv()
 
 # Initilize bot object and intents
 bot = commands.Bot()
@@ -15,10 +19,11 @@ bot.intents.all()
 # Variables for use later
 guilds=[196640093350395915]
 vc_category=392461674218651658
-perm_voip=[392475931165327360]
+greenroom=933045322819723304
+perm_voip=[392475931165327360, 933045322819723304]
 
 # TODO: Replace with system variable impport
-token=os.environ.get('DISCORD_BOT_TOKEN')
+token=os.getenv('DISCORD_BOT_TOKEN')
 
 if __name__ == "__main__":
     # Function runs when bot connection finalizes
