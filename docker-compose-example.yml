@@ -1,0 +1,40 @@
+version: "2"
+
+services:
+    bot:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      depends_on: 
+        - db
+      image: shanghai-doll_dev
+      container_name: shanghai-doll_dev
+      #restart: always
+      volumes:
+        - ./app:/app
+      entrypoint: python3 -u /app/main.py
+      environment:
+        - MYSQL_ROOT_PASSWORD=
+        - MYSQL_DATABASE=
+        - MYSQL_USER=
+        - MYSQL_PASSWORD=
+
+        - DISCORD_BOT_TOKEN=
+        - GUILDS=
+        - VC_CATEGORY=
+        - GREENROOM=
+        - DYN_VOIP=
+        - PERM_VOIP=
+    db:
+      image: mysql:latest
+      container_name: shanghai-doll_db
+      #restart: always
+      ports:
+        - 3306:3306
+      environment:
+        - MYSQL_ROOT_PASSWORD=
+        - MYSQL_DATABASE=
+        - MYSQL_USER=
+        - MYSQL_PASSWORD=
+      volumes:
+        - ./db:/var/lib/mysql

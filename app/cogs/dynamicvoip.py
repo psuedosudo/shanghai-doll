@@ -1,14 +1,7 @@
 import discord, asyncio, os
 from discord.ext import commands
-
-# Import channel IDs from .env file
-from dotenv import load_dotenv
-load_dotenv()
-
-# Guild IDs list for command registration to the server. Although the bot is currently
-# written with the assumption that it is only in one server, pycord requires this in
-# list form as it has to assume the bot may be in many discords at once.
 guilds=[int(os.getenv('GUILDS'))]
+
 # The channel category ID for voice channels
 vc_category=int(os.getenv('VC_CATEGORY'))
 # The channel ID of the greenroom vc.
@@ -17,17 +10,11 @@ greenroom=int(os.getenv('GREENROOM'))
 # second value is for the master dynamic voice channel ID.
 dyn_voip=('dynvoip-', int(os.getenv('DYN_VOIP')))
 # List of voice channels that are blacklisted from automatic removal
-perm_voip_raw=os.getenv('PERM_VOIP')
-perm_voip=[]
-
-for i in perm_voip_raw.split(','):
-    perm_voip.append(int(i))
+perm_voip=list(map(int, os.getenv('PERM_VOIP').split(',')))
 
 class Dynamicvoip(commands.Cog):
-
     def __init__(self, bot):
         self.bot = bot
-
 
     # == EVENT FLAGS ==
     # Function runs when bot connection finalizes
@@ -49,12 +36,11 @@ class Dynamicvoip(commands.Cog):
     
     #https://docs.pycord.dev/en/master/api.html?highlight=on_voice_state_update#discord.on_thread_update
     @discord.Cog.listener()
-    async def on_reaction_add(reaction, user):
+    async def on_reaction_add(self, reaction, user):
         # The bot should use the DM string of the reaction.message value to determine
         # the intent of the action, and also verifiy that reaction.message.author is 
         # itself to prevent bypass.
         pass
-
 
     # == SLASH COMMANDS ==
     # /privatevoip - Creates private voice channels, requires a name argument
@@ -105,7 +91,6 @@ class Dynamicvoip(commands.Cog):
                     mute_members=True, move_members=True)
         await ctx.respond("Voice Channel Created!", ephemeral=True)
 
-
 #========================================================================================
 #==                                     TO IMPLEMENT                                   ==
 #========================================================================================
@@ -115,7 +100,7 @@ class Dynamicvoip(commands.Cog):
     # is IN the channel a message, and on confirmation, will move the user into the vc.
     @discord.slash_command(guild_ids=guilds, 
             description='Requests users to allow joining private VC')
-    async def joinrequest(ctx):
+    async def joinrequest(self, ctx):
         # The command should get the user object of the @mention, then find what voice 
         # channel they are in, check if the @everyone permission is blocked. If it is
         # blocked, iterate through every user in the voice channel, and see if they have
@@ -124,32 +109,23 @@ class Dynamicvoip(commands.Cog):
         # emoji for messages.
         await ctx.respond("Not Yet Emplimented...", ephemeral=True)
 
-
     # /yoink - While in generated channels, you can /yoink @someone to pull them into
     # your channel, regardless of there perms. Is mostly for when people want to request
     # to join a room, or when you're waiting in a voip for streaming, but you don't want
     # unexpected visitors in your stream.
     @discord.slash_command(guild_ids=guilds, 
             description='Moves users from greenroom into current VC')
-    async def yoink(ctx):
+    async def yoink(self, ctx):
         # Should first check to see if issuer is either not in achannel, or the channel
         # they're in is a perm_voip, and if true, deny the command. If they are in a 
         # generated channel, check if the @mentioned user is in the greenroom. If they
         # are, then move them into the issuer's voice channel.
         await ctx.respond("Not Yet Emplimented...", ephemeral=True)
 
-
     # Will fill out later. 
     @discord.slash_command(guild_ids=guilds, 
             description='Moves all users to Homeroom and removes current VC')
-    async def unprivate(ctx, channel=None):
-        await ctx.respond("Not Yet Emplimented...", ephemeral=True)
-
-
-    # Will fill out later 
-    @discord.slash_command(guild_ids=guilds, 
-            description='Shows current level status, or @someone\'s status')
-    async def rpg(ctx):
+    async def unprivate(self, ctx, channel=None):
         await ctx.respond("Not Yet Emplimented...", ephemeral=True)
 
 def setup(bot):
