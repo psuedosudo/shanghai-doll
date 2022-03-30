@@ -91,6 +91,34 @@ class Dynamicvoip(commands.Cog):
                     mute_members=True, move_members=True)
         await ctx.respond("Voice Channel Created!", ephemeral=True)
 
+    # /yoink - While in generated channels, you can /yoink @someone to pull them into
+    # your channel, regardless of there perms. Is mostly for when people want to request
+    # to join a room, or when you're waiting in a voip for streaming, but you don't want
+    # unexpected visitors in your stream.
+    @discord.slash_command(guild_ids=guilds, 
+            description='Moves users from greenroom into current VC')
+    async def yoink(self, ctx, target):
+        member_converter = commands.MemberConverter()
+        target = await member_converter.convert(ctx, target[3:-1])
+        try: 
+            if ctx.author.voice.channel.id not in perm_voip:
+                if target.voice.channel.id == greenroom:
+                    perms = ctx.author.voice.channel.overwrites_for(ctx.author)
+                    if perms.connect != False:
+                        await target.move_to(ctx.author.voice.channel)
+                        await ctx.respond("Moved!", ephemeral=True)
+                    else:
+                        await ctx.respond("You don't have permissions for this channel!",
+                            ephemeral=True)
+                else:
+                    await ctx.respond("User not found in Greenroom!", ephemeral=True)
+            else:
+                await ctx.respond("You can't use this in a public room!", 
+                    ephemeral=True)
+        except Exception as e:
+            # await ctx.respond("Invalid conditions!", ephemeral=True)
+            await ctx.respond(e, ephemeral=True)
+
 #========================================================================================
 #==                                     TO IMPLEMENT                                   ==
 #========================================================================================
@@ -107,19 +135,6 @@ class Dynamicvoip(commands.Cog):
         # permissions in the channel, and if so, dm a message for confirmation. Some
         # code will likely need to be written for an event flag for when people add
         # emoji for messages.
-        await ctx.respond("Not Yet Emplimented...", ephemeral=True)
-
-    # /yoink - While in generated channels, you can /yoink @someone to pull them into
-    # your channel, regardless of there perms. Is mostly for when people want to request
-    # to join a room, or when you're waiting in a voip for streaming, but you don't want
-    # unexpected visitors in your stream.
-    @discord.slash_command(guild_ids=guilds, 
-            description='Moves users from greenroom into current VC')
-    async def yoink(self, ctx):
-        # Should first check to see if issuer is either not in achannel, or the channel
-        # they're in is a perm_voip, and if true, deny the command. If they are in a 
-        # generated channel, check if the @mentioned user is in the greenroom. If they
-        # are, then move them into the issuer's voice channel.
         await ctx.respond("Not Yet Emplimented...", ephemeral=True)
 
     # Will fill out later. 
