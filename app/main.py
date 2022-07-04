@@ -12,7 +12,7 @@ def main():
     bot = CustomBot()
     bot.intents.all()
 
-    for x in range(0,15):
+    for database_connect_iter in range(0,15):
         time.sleep(3)
         try:
             bot.db.bind(provider='mysql', host='db', 
