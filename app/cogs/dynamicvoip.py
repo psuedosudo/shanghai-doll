@@ -2,6 +2,13 @@ import discord, asyncio, os
 from discord.ext import commands
 guilds=[int(os.getenv('GUILDS'))]
 
+# TODO:
+# *) Create database index for channel entries
+# *) Refactor environment input as an alternative to command based updates to database
+# *) Have channels created manually automatically be added to database
+# *) /joinrequest
+# *) Dynamic Voice Propogation
+
 # The channel category ID for voice channels
 vc_category=int(os.getenv('VC_CATEGORY'))
 # The channel ID of the greenroom vc.
@@ -52,8 +59,8 @@ class Dynamicvoip(commands.Cog):
         # Mostly just not sure what can error here, will do testing later.
         try:
             invite = invite.split(' ')
-        except:
-            pass
+        except Exception as e:
+            await ctx.respond(str(e), ephemeral=True)
         
         # Just grabbing some objects to use later
         members = [ctx.author]
@@ -73,7 +80,8 @@ class Dynamicvoip(commands.Cog):
             if invite != None:
                 for i in invite:
                     # We use get_or_fetch_user because the user likely isn't cached.
-                    user = await self.bot.get_or_fetch_user(int(i[3:-1])) 
+                    # print(i)
+                    user = await self.bot.get_or_fetch_user(int(i[2:-1])) 
                     members.append(user)
         except Exception as e:
             await ctx.respond(str(e), ephemeral=True)
@@ -99,7 +107,7 @@ class Dynamicvoip(commands.Cog):
             description='Moves users from greenroom into current VC')
     async def yoink(self, ctx, target):
         member_converter = commands.MemberConverter()
-        target = await member_converter.convert(ctx, target[3:-1])
+        target = await member_converter.convert(ctx, target[2:-1])
         try: 
             if ctx.author.voice.channel.id not in perm_voip:
                 if target.voice.channel.id == greenroom:

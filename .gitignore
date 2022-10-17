@@ -1,5 +1,6 @@
 # Custom
 db/
+db
 .env
 docker-compose.yml
 
